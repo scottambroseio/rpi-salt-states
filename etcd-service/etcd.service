@@ -1,0 +1,16 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos/etcd
+
+[Service]
+Type=notify
+Restart=always
+RestartSec=5s
+LimitNOFILE=40000
+TimeoutStartSec=0
+Environment=ETCD_UNSUPPORTED_ARCH=arm
+Environment=GOMAXPROCS=4
+ExecStart=/opt/etcd/etcd --data-dir=/var/lib/etcd --name {{ grains['hostname'] }} --initial-advertise-peer-urls http://{{ grains['ip'] }}:2380 --listen-peer-urls http://{{ grains['ip'] }}:2380 --advertise-client-urls http://{{ grains['ip'] }}:2379 --listen-client-urls http://{{ grains['ip'] }}:2379 --initial-cluster rpi3a=http://192.168.0.103:2380,rpi3b=http://192.168.0.106:2380,rpi3c=http://192.168.0.102:2380 --initial-cluster-state new --initial-cluster-token token
+
+[Install]
+WantedBy=multi-user.target
